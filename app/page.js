@@ -35,11 +35,8 @@ function List() {
         <p className="font-bold bg-green-200 rounded-xl px-2">{list.shoppingCenter}</p>
         <p className="bg-green-200 rounded-xl px-2">{list.date}</p>
       </div>
-      
-        <div >
-          <div className="absolute top-0 left-0 bottom-0 right-0 opacity-5 bg-black"></div>
-        <Image className="-z-10" src={HomeListBgImage} fill alt="List" />
-        </div>
+        <Image className="-z-10" priority sizes="100" src={HomeListBgImage} fill alt="List" />
+        
      
     </div>
   );
