@@ -11,7 +11,7 @@ const heroiconsHeart = (
 
 export default function Footer() {
   return (
-    <footer className="absolute bottom-0 right-0 left-0 bg-blue-50 shadow p-3 text-center z-20">
+    <footer className="fixed bottom-0 right-0 left-0 bg-blue-50 shadow p-3 text-center z-20">
       <p className="flex mx-auto w-fit font-semibold">
         Created with {heroiconsHeart} by Ehsan
       </p>

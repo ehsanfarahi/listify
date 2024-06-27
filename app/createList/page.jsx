@@ -131,13 +131,6 @@ function FormControlItem() {
   const { dispatch, makeList, listItem, shoppingCenter } =
     useContext(CreateListContext);
 
-  // const [allShoppingLists, setAllShoppingLists] = useState(() => {
-  //   if (typeof window !== "undefined") {
-  //     const sList = localStorage.getItem("listify");
-  //     return sList ? sList : localStorage.setItem("listify", []);
-  //   }
-  // });
-
   function addItem() {
     if (listItem === "" || listItem.length < 3) return;
 
