@@ -17,7 +17,7 @@ export default function Page() {
 
   return (
     <div className="grid grid-cols-2 gap-2 mx-2 my-4">
-      {shoppingList.map((list, i) => (
+      {shoppingList?.map((list, i) => (
         <HomeListContext.Provider key={i} value={{ list }}>
           <List />
         </HomeListContext.Provider>
