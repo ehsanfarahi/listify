@@ -5,6 +5,12 @@ import { createContext, useContext, useReducer } from "react";
 // Context API
 const CreateListContext = createContext();
 
+// Functions
+import { randomId, date } from "../_functions";
+
+// Constants
+import { getListify } from "../_constants";
+
 // Components
 import Button from "../_components/Button";
 
@@ -46,6 +52,14 @@ function reducer(state, action) {
 }
 
 export default function Page() {
+  return (
+    <div>
+      <CreateListForm />
+    </div>
+  );
+}
+
+function CreateListForm() {
   const [{ shoppingCenter, listItem, makeList }, dispatch] = useReducer(
     reducer,
     initialState
@@ -65,21 +79,21 @@ export default function Page() {
           shoppingCenter,
         }}
       >
-        <FormControl />
-        <FormControlItem />
+        <FormControl>Shopping Center</FormControl>
+        <FormControlItem>Item</FormControlItem>
         <DisplayList />
       </CreateListContext.Provider>
     </div>
   );
 }
 
-function FormControl() {
+function FormControl({children}) {
   const { dispatch } = useContext(CreateListContext);
 
   return (
     <div className="mt-4 flex flex-col">
       <label className="font-semibold text-slate-700 mb-2">
-        Shopping Center
+        {children}
       </label>
       <input
         onChange={(e) =>
@@ -93,27 +107,13 @@ function FormControl() {
   );
 }
 
-function randomId() {
-  const id = Math.floor(Math.random() * 100000);
-  return id;
-}
-
-function date() {
-  const date = new Date();
-  const getDay = date.getDate();
-  const getMonth = date.getMonth() + 1;
-  const getYear = date.getFullYear();
-  return `${getDay}.${getMonth}.${getYear}`;
-}
-
-const getLocal =
-  typeof window !== "undefined" && localStorage.getItem("listify");
 const getL =
   typeof window !== "undefined" && localStorage.getItem("listify")
-    ? JSON.parse(getLocal)
+    ? JSON.parse(getListify)
     : "";
 
 const shopList = [...getL];
+
 let createList = {
   id: null,
   date: null,
@@ -121,7 +121,7 @@ let createList = {
   list: [],
 };
 
-function FormControlItem() {
+function FormControlItem({children}) {
   const { dispatch, makeList, listItem, shoppingCenter } =
     useContext(CreateListContext);
 
@@ -144,6 +144,8 @@ function FormControlItem() {
   }
 
   function createAnotherList() {
+    if (makeList.length < 1) return;
+
     dispatch({
       type: "createAnotherList",
       payload: { makeList: [], listItem: "", shoppingCenter: "" },
@@ -158,7 +160,7 @@ function FormControlItem() {
 
   return (
     <div className="mt-4 flex flex-col">
-      <label className="font-semibold text-slate-700 mb-2">Item</label>
+      <label className="font-semibold text-slate-700 mb-2">{children}</label>
       <div className="w-full flex">
         <input
           value={listItem}

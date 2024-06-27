@@ -14,3 +14,7 @@ export const menuData = [
     menuNavigation: "/createList",
   },
 ];
+
+// Local Storage Data
+export const getListify =
+  typeof window !== "undefined" && localStorage.getItem("listify");

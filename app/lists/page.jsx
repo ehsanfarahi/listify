@@ -5,16 +5,20 @@ import { useEffect, useState, createContext, useContext } from "react";
 // Components
 import Button from "../_components/Button";
 
+// Constants
+import { getListify } from "../_constants";
+
 // Context API
 const ListsContext = createContext();
+const DeleteMessageContext = createContext();
 
 export default function Page() {
   const [shoppingList, setShoppingList] = useState([]);
   
-
   useEffect(() => {
-    const getList = localStorage.getItem("listify");
-    setShoppingList(JSON.parse(getList));
+    const getListif =  typeof window !== "undefined" && localStorage.getItem("listify");
+    
+    setShoppingList(JSON.parse(getListif));
   }, []);
 
   return (
@@ -31,30 +35,32 @@ export default function Page() {
 
 function Lists() {
   const {data} = useContext(ListsContext);
+  const [displayDeleteMessage, setDisplayDeleteMessage] = useState(false);
   return (
-    <div className="overflow-x-scroll">
-      <div className=" rounded flex justify-between  w-fit">
-      <div className="border-t-[0.2rem] border-green-200">
-      <div className="flex justify-between items-center w-screen p-3 bg-green-50 border-b-[0.2rem] border-green-200">
+   
+    <DeleteMessageContext.Provider value={{displayDeleteMessage, setDisplayDeleteMessage}}>
+      <div className="overflow-x-scroll">
+      <div className=" rounded flex justify-between mb-2 w-fit">
+      <div className="">
+      <div className="flex justify-between items-center w-screen p-3 bg-green-50">
         <p className="font-bold">{data?.shoppingCenter}</p>
         <p>{data?.date}</p>
       </div>
       </div>
-      <div className=" w-[5rem] bg-red-500"><DeleteList id={data?.id} /></div>
+      <div onClick={()=>setDisplayDeleteMessage(true)} className=" w-[5rem] bg-red-500"><DeleteList /></div>
     </div>
+    {displayDeleteMessage && <DeleteMessage id={data?.id} />}
     </div>
+    </DeleteMessageContext.Provider>
+    
+    
   );
 }
 
-function DeleteList({ id }) {
+function DeleteList() {
+  const {setDisplayDeleteMessage} = useContext(DeleteMessageContext);
   function deleteListData() {
-    const getList =
-      typeof window !== "undefined" && localStorage.getItem("listify");
-
-    const filteredList = JSON.parse(getList).filter((list) => list.id !== id);
-
-    localStorage.setItem("listify", JSON.stringify(filteredList));
-
+    setDisplayDeleteMessage(true);
   }
   return (
     <div className="flex justify-center items-center h-full w-full">
@@ -63,4 +69,32 @@ function DeleteList({ id }) {
   );
 }
 
+function DeleteMessage({ id }) {
+  const {setDisplayDeleteMessage} = useContext(DeleteMessageContext);
+
+  function deleteList() {
+
+    const filteredList = JSON.parse(getListify).filter((list) => list.id !== id);
+
+    localStorage.setItem("listify", JSON.stringify(filteredList));
+
+    cancelDelete();
+
+  }
+
+  function cancelDelete() {
+    setDisplayDeleteMessage(false);
+  }
+
+  return <div className="fixed top-0 left-0 bottom-0 right-0">
+    <div className="absolute top-0 left-0 bottom-0 right-0 bg-black opacity-35" />
+    <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-[60%] rounded p-4 bg-white">
+      <p className="font-semibold text-sm">Are you sure, you want to delete this list?</p>
+      <div className="flex justify-between gap-2 items-center mt-6">
+      <Button onClick={cancelDelete} customStyle="bg-orange-300 font-semibold rounded p-1 w-full">Cancel</Button>
+        <Button onClick={deleteList} customStyle="bg-green-300 font-semibold rounded p-1 w-full">Yes</Button>
+      </div>
+    </div>
+  </div>
+}
 
