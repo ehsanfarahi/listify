@@ -2,6 +2,8 @@
 
 import { useEffect, useState, createContext, useContext } from "react";
 
+import { useRouter } from "next/navigation";
+
 // Components
 import Button from "../_components/Button";
 
@@ -14,46 +16,59 @@ const DeleteMessageContext = createContext();
 
 export default function Page() {
   const [shoppingList, setShoppingList] = useState([]);
-  
+
   useEffect(() => {
-    const getListif =  typeof window !== "undefined" && localStorage.getItem("listify");
-    
+    const getListif =
+      typeof window !== "undefined" && localStorage.getItem("listify");
+
     setShoppingList(JSON.parse(getListif));
   }, []);
 
   return (
     <div className="my-4">
-      {shoppingList?.filter(s => s !== "")?.map((list, i) => (
-        <ListsContext.Provider key={i} value={{data: list}}>
-          <Lists />
-        </ListsContext.Provider>
-      ))}
+      {shoppingList
+        ?.filter((s) => s !== "")
+        ?.map((list, i) => (
+          <ListsContext.Provider key={i} value={{ data: list }}>
+            <Lists />
+          </ListsContext.Provider>
+        ))}
     </div>
   );
 }
 
-
 function Lists() {
-  const {data} = useContext(ListsContext);
+  const { data } = useContext(ListsContext);
   const [displayDeleteMessage, setDisplayDeleteMessage] = useState(false);
+
+  const navigate = useRouter();
+
+  function editList() {
+    navigate.push(`editList/${data.id}`);
+  }
+
   return (
-   
-    <DeleteMessageContext.Provider value={{displayDeleteMessage, setDisplayDeleteMessage}}>
+    <DeleteMessageContext.Provider
+      value={{ displayDeleteMessage, setDisplayDeleteMessage }}
+    >
       <div className="overflow-x-scroll">
-      <div className=" rounded flex justify-between mb-2 w-fit">
-      <div className="">
-      <div className="flex justify-between items-center w-screen p-3 bg-green-50">
-        <p className="font-bold">{data?.shoppingCenter}</p>
-        <p>{data?.date}</p>
+        <div className=" rounded flex justify-between mb-2 w-fit">
+          <div onClick={editList}>
+            <div className="flex justify-between items-center w-screen p-3 bg-green-50">
+              <p className="font-bold">{data?.shoppingCenter}</p>
+              <p>{data?.date}</p>
+            </div>
+          </div>
+          <div
+            onClick={() => setDisplayDeleteMessage(true)}
+            className=" w-[5rem] bg-red-500"
+          >
+            <DeleteList />
+          </div>
+        </div>
+        {displayDeleteMessage && <DeleteMessage id={data?.id} />}
       </div>
-      </div>
-      <div onClick={()=>setDisplayDeleteMessage(true)} className=" w-[5rem] bg-red-500"><DeleteList /></div>
-    </div>
-    {displayDeleteMessage && <DeleteMessage id={data?.id} />}
-    </div>
     </DeleteMessageContext.Provider>
-    
-    
   );
 }
 
