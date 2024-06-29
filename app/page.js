@@ -5,7 +5,11 @@ import { useState, useEffect, createContext, useContext } from "react";
 
 import { useRouter } from "next/navigation";
 
+// Images
 import HomeListBgImage from "/public/kart3.jpg";
+
+// Components
+import NoList from "./_components/NoList";
 
 const HomeListContext = createContext();
 
@@ -19,11 +23,17 @@ export default function Page() {
 
   return (
     <div className="grid grid-cols-2 gap-2 mx-2 my-4">
-      {shoppingList?.map((list, i) => (
-        <HomeListContext.Provider key={i} value={{ list }}>
-          <List />
-        </HomeListContext.Provider>
-      ))}
+      {shoppingList.length > 0 ? (
+        <>
+          {shoppingList?.map((list, i) => (
+            <HomeListContext.Provider key={i} value={{ list }}>
+              <List />
+            </HomeListContext.Provider>
+          ))}{" "}
+        </>
+      ) : (
+        <NoList />
+      )}
     </div>
   );
 }
@@ -59,3 +69,5 @@ function List() {
     </div>
   );
 }
+
+

@@ -2,6 +2,8 @@
 
 import { createContext, useContext, useReducer } from "react";
 
+import { useRouter } from "next/navigation";
+
 // Context API
 const CreateListContext = createContext();
 
@@ -11,6 +13,9 @@ import { randomId, date } from "../_functions";
 // Constants
 import { getListify } from "../_constants";
 
+// React Icons
+import { FaCheckCircle } from "../_reactIcons";
+
 // Components
 import Button from "../_components/Button";
 
@@ -19,6 +24,7 @@ const initialState = {
   shoppingCenter: "",
   listItem: "",
   makeList: [],
+  displayMessage: false,
 };
 
 function reducer(state, action) {
@@ -45,6 +51,13 @@ function reducer(state, action) {
         makeList: action.payload.makeList,
         listItem: action.payload.listItem,
         shoppingCenter: action.payload.shoppingCenter,
+        displayMessage: action.payload.displayMessage,
+      };
+    case "displayMessage":
+      return {
+        ...state,
+        displayMessage: action.payload.displayMessage,
+        shoppingCenter: action.payload.shoppingCenter,
       };
     default:
       throw new Error("Action unknown");
@@ -60,10 +73,8 @@ export default function Page() {
 }
 
 function CreateListForm() {
-  const [{ shoppingCenter, listItem, makeList }, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
+  const [{ shoppingCenter, listItem, makeList, displayMessage }, dispatch] =
+    useReducer(reducer, initialState);
 
   return (
     <div className="py-2 px-6">
@@ -77,29 +88,30 @@ function CreateListForm() {
           makeList,
           listItem,
           shoppingCenter,
+          displayMessage,
         }}
       >
         <FormControl>Shopping Center</FormControl>
         <FormControlItem>Item</FormControlItem>
         <DisplayList />
+        {displayMessage && <ListCreateMessage />}
       </CreateListContext.Provider>
     </div>
   );
 }
 
-function FormControl({children}) {
-  const { dispatch } = useContext(CreateListContext);
+function FormControl({ children }) {
+  const { dispatch, shoppingCenter } = useContext(CreateListContext);
 
   return (
     <div className="mt-4 flex flex-col">
-      <label className="font-semibold text-slate-700 mb-2">
-        {children}
-      </label>
+      <label className="font-semibold text-slate-700 mb-2">{children}</label>
       <input
         onChange={(e) =>
           dispatch({ type: "shoppingCenter", payload: e.target.value })
         }
         type="text"
+        value={shoppingCenter}
         placeholder="Add shop's name"
         className="border-2 p-2 border-green-100 rounded outline-green-200"
       />
@@ -121,7 +133,7 @@ let createList = {
   list: [],
 };
 
-function FormControlItem({children}) {
+function FormControlItem({ children }) {
   const { dispatch, makeList, listItem, shoppingCenter } =
     useContext(CreateListContext);
 
@@ -148,7 +160,12 @@ function FormControlItem({children}) {
 
     dispatch({
       type: "createAnotherList",
-      payload: { makeList: [], listItem: "", shoppingCenter: "" },
+      payload: {
+        makeList: [],
+        listItem: "",
+        shoppingCenter: "",
+        displayMessage: true,
+      },
     });
 
     shopList.push(createList);
@@ -180,7 +197,7 @@ function FormControlItem({children}) {
       </div>
       <Button
         onClick={createAnotherList}
-        customStyle="bg-blue-200 mt-4 rounded py-1 text-green-600 font-semibold"
+        customStyle="bg-blue-300 mt-4 rounded py-2 text-green-600 font-semibold"
       >
         Create list
       </Button>
@@ -208,6 +225,54 @@ function DisplayList() {
           - {item}
         </p>
       ))}
+    </div>
+  );
+}
+
+function ListCreateMessage() {
+  const navigate = useRouter();
+
+  const { dispatch } = useContext(CreateListContext);
+
+  function createNewList() {
+    dispatch({
+      type: "displayMessage",
+      payload: {
+        displayMessage: false,
+        shoppingCenter: "",
+      },
+    });
+  }
+
+  function goToHomePage() {
+    dispatch({ type: "displayMessage", payload: false });
+
+    navigate.push("/");
+  }
+
+  return (
+    <div className="fixed top-0 left-0 bottom-0 right-0">
+      <div className="absolute top-0 left-0 bottom-0 right-0 bg-black opacity-35" />
+      <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-[60%] rounded p-4 bg-white">
+        <p className="font-semibold text-sm flex items-center">
+          <FaCheckCircle className="text-green-500 text-lg mr-2" /> List created
+          successfully!
+        </p>
+        <div className="flex justify-between gap-2 items-center mt-6">
+          <Button
+            onClick={goToHomePage}
+            customStyle="bg-orange-300 font-semibold rounded p-1 w-full"
+          >
+            Home page
+          </Button>
+          <Button
+            onClick={createNewList}
+            customStyle="bg-green-300 font-semibold rounded p-1 w-full"
+          >
+            Create new
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 // Components
 import Button from "../_components/Button";
+import NoList from "../_components/NoList";
 
 // Constants
 import { getListify } from "../_constants";
@@ -22,17 +23,19 @@ export default function Page() {
       typeof window !== "undefined" && localStorage.getItem("listify");
 
     setShoppingList(JSON.parse(getListif));
-  }, []);
+  }, [shoppingList]);
 
   return (
     <div className="my-4">
-      {shoppingList
+      {shoppingList.length > 0 ? <>
+        {shoppingList
         ?.filter((s) => s !== "")
         ?.map((list, i) => (
           <ListsContext.Provider key={i} value={{ data: list }}>
             <Lists />
           </ListsContext.Provider>
         ))}
+      </> : <NoList />}
     </div>
   );
 }

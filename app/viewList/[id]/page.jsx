@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { MdKeyboardBackspace } from "../../_reactIcons";
 
 // Constants
-import { getListify } from "@/app/_constants";
+// import { getListify } from "@/app/_constants";
 
 export default function Page({ params }) {
   const [listData, setListData] = useState([]);
@@ -17,7 +17,9 @@ export default function Page({ params }) {
   const { id } = params;
 
   useEffect(() => {
-    const list = JSON.parse(getListify).filter(
+    const getList = typeof window !== "undefined" && localStorage.getItem("listify"); 
+
+    const list = JSON.parse(getList).filter(
       (list) => list.id === Number(id)
     );
     setListData(list.at(0));
