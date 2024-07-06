@@ -15,7 +15,7 @@ import ShareApp from "./ShareApp";
 
 // useReducer
 const initialState = {
-  showMenu: false,
+  showMenu: false, 
   showBarcode: false,
 };
 
