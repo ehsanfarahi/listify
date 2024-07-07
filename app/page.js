@@ -10,29 +10,43 @@ import HomeListBgImage from "/public/kart3.jpg";
 
 // Components
 import NoList from "./_components/NoList";
+import Loader from "./_components/Loader";
 
 const HomeListContext = createContext();
 
 export default function Page() {
   const [shoppingList, setShoppingList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); 
 
   useEffect(() => {
-    const getList = localStorage.getItem("listify");
-    setShoppingList(JSON.parse(getList));
+    try {
+      const getList = localStorage.getItem("listify");
+      setShoppingList(JSON.parse(getList));
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
   return (
     <div className="grid grid-cols-2 gap-2 mx-2 my-4">
-      {shoppingList.length > 0 ? (
-        <>
-          {shoppingList?.map((list, i) => (
-            <HomeListContext.Provider key={i} value={{ list }}>
-              <List />
-            </HomeListContext.Provider>
-          ))}{" "}
-        </>
+      {isLoading ? (
+        <Loader />
       ) : (
-        <NoList />
+        <>
+          {shoppingList.length > 0 ? (
+            <>
+              {shoppingList?.map((list, i) => (
+                <HomeListContext.Provider key={i} value={{ list }}>
+                  <List />
+                </HomeListContext.Provider>
+              ))}{" "}
+            </>
+          ) : (
+            <NoList />
+          )}
+        </>
       )}
     </div>
   );
@@ -61,6 +75,7 @@ function List() {
       <Image
         className="-z-10"
         priority
+        placeholder="blur"
         sizes="100"
         src={HomeListBgImage}
         fill

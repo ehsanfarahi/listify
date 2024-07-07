@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 // Components
 import Button from "../_components/Button";
 import NoList from "../_components/NoList";
+import Loader from "../_components/Loader";
 
 // Constants
 import { getListify } from "../_constants";
@@ -17,25 +18,42 @@ const DeleteMessageContext = createContext();
 
 export default function Page() {
   const [shoppingList, setShoppingList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const getListif =
-      typeof window !== "undefined" && localStorage.getItem("listify");
+    try {
+      const getListif =
+        typeof window !== "undefined" && localStorage.getItem("listify");
 
-    setShoppingList(JSON.parse(getListif));
+      setShoppingList(JSON.parse(getListif));
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
   return (
     <div className="my-4">
-      {shoppingList.length > 0 ? <>
-        {shoppingList
-        ?.filter((s) => s !== "")
-        ?.map((list, i) => (
-          <ListsContext.Provider key={i} value={{ data: list }}>
-            <Lists />
-          </ListsContext.Provider>
-        ))}
-      </> : <NoList />}
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <>
+          {shoppingList.length > 0 ? (
+            <>
+              {shoppingList
+                ?.filter((s) => s !== "")
+                ?.map((list, i) => (
+                  <ListsContext.Provider key={i} value={{ data: list }}>
+                    <Lists />
+                  </ListsContext.Provider>
+                ))}
+            </>
+          ) : (
+            <NoList />
+          )}
+        </>
+      )}
     </div>
   );
 }

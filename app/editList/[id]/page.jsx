@@ -10,18 +10,28 @@ import { MdKeyboardBackspace, MdDelete } from "../../_reactIcons";
 import { getListify } from "@/app/_constants";
 import Button from "@/app/_components/Button";
 
+// Components
+import Loader from "@/app/_components/Loader";
+
 export default function Page({ params }) {
   const [listData, setListData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useRouter();
 
   const { id } = params;
 
   useEffect(() => {
-    const list = JSON.parse(getListify).filter(
-      (list) => list.id === Number(id)
-    );
-    setListData(list.at(0));
+    try {
+      const list = JSON.parse(getListify).filter(
+        (list) => list.id === Number(id)
+      );
+      setListData(list.at(0));
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
   }, [id]);
 
   return (
@@ -33,16 +43,20 @@ export default function Page({ params }) {
         <MdKeyboardBackspace className="text-[1.7rem]" />
         <p className="pl-2 text-sm">Go back</p>
       </div>
-      <div>
-        <div className="border-b-2 border-dashed border-green-300 text-center pb-2 font-bold text-lg mt-2">
-          {listData?.shoppingCenter}
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <div>
+          <div className="border-b-2 border-dashed border-green-300 text-center pb-2 font-bold text-lg mt-2">
+            {listData?.shoppingCenter}
+          </div>
+          <div className="mt-4">
+            {listData?.list?.map((item, i) => (
+              <ItemDisplay key={i} item={item} />
+            ))}
+          </div>
         </div>
-        <div className="mt-4">
-          {listData?.list?.map((item, i) => (
-            <ItemDisplay key={i} item={item} />
-          ))}
-        </div>
-      </div>
+      )}
     </div>
   );
 }

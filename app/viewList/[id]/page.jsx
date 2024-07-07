@@ -6,23 +6,32 @@ import { useRouter } from "next/navigation";
 // React Icons
 import { MdKeyboardBackspace } from "../../_reactIcons";
 
+// Components
+import Loader from "@/app/_components/Loader";
+
 // Constants
 // import { getListify } from "@/app/_constants";
 
 export default function Page({ params }) {
   const [listData, setListData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useRouter();
 
   const { id } = params;
 
   useEffect(() => {
-    const getList = typeof window !== "undefined" && localStorage.getItem("listify"); 
+    try {
+      const getList =
+        typeof window !== "undefined" && localStorage.getItem("listify");
 
-    const list = JSON.parse(getList).filter(
-      (list) => list.id === Number(id)
-    );
-    setListData(list.at(0));
+      const list = JSON.parse(getList).filter((list) => list.id === Number(id));
+      setListData(list.at(0));
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
   }, [id]);
 
   return (
@@ -34,16 +43,20 @@ export default function Page({ params }) {
         <MdKeyboardBackspace className="text-[1.7rem]" />
         <p className="pl-2 text-sm">Go back</p>
       </div>
-      <div>
-        <div className="border-b-2 border-dashed border-green-300 text-center pb-2 font-bold text-lg mt-2">
-          {listData?.shoppingCenter}
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <div>
+          <div className="border-b-2 border-dashed border-green-300 text-center pb-2 font-bold text-lg mt-2">
+            {listData?.shoppingCenter}
+          </div>
+          <div className="mt-4">
+            {listData?.list?.map((item, i) => (
+              <ItemDisplay key={i} item={item} />
+            ))}
+          </div>
         </div>
-        <div className="mt-4">
-          {listData?.list?.map((item, i) => (
-            <ItemDisplay key={i} item={item} />
-          ))}
-        </div>
-      </div>
+      )}
     </div>
   );
 }

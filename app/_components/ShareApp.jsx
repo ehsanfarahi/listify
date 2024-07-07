@@ -9,7 +9,7 @@ import { HeaderContext } from "./Header";
 import { MdClose } from "../_reactIcons";
 
 // barcode
-import barcode from "../../public/barcode.gif";
+import Barcode from "../../public/barcode.gif";
 
 export default function ShareApp() {
   const { showBarcode, dispatch } = useContext(HeaderContext);
@@ -52,7 +52,7 @@ export default function ShareApp() {
         <div className="w-full">
           <Image
             className="mx-auto mb-[4rem] mt-[1rem] w-[50%] border-[.4rem] border-black p-[.4rem]"
-            src={barcode}
+            src={Barcode}
             alt="barcode"
             priority
           />

@@ -19,6 +19,7 @@ export default function NoList() {
       <Image
         src={listImage}
         alt="list"
+        placeholder="blur" 
         className="w-[10rem] aspect-square mx-auto"
       />
       <p className="text-center mt-4 uppercase font-semibold">No lists found</p>
