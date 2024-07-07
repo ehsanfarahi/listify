@@ -12,6 +12,9 @@ import Loader from "../_components/Loader";
 // Constants
 import { getListify } from "../_constants";
 
+// Functions
+import { formatedDate } from "../_functions";
+
 // Context API
 const ListsContext = createContext();
 const DeleteMessageContext = createContext();
@@ -43,8 +46,8 @@ export default function Page() {
             <>
               {shoppingList
                 ?.filter((s) => s !== "")
-                ?.map((list, i) => (
-                  <ListsContext.Provider key={i} value={{ data: list }}>
+                ?.sort((a, b) => new Date(b.date) - new Date(a.date)).map((list, i) => (
+                  <ListsContext.Provider key={i} value={{ data: list, setShoppingList }}>
                     <Lists />
                   </ListsContext.Provider>
                 ))}
@@ -59,7 +62,7 @@ export default function Page() {
 }
 
 function Lists() {
-  const { data } = useContext(ListsContext);
+  const { data, setShoppingList } = useContext(ListsContext);
   const [displayDeleteMessage, setDisplayDeleteMessage] = useState(false);
 
   const navigate = useRouter();
@@ -70,14 +73,14 @@ function Lists() {
 
   return (
     <DeleteMessageContext.Provider
-      value={{ displayDeleteMessage, setDisplayDeleteMessage }}
+      value={{ displayDeleteMessage, setDisplayDeleteMessage, setShoppingList }}
     >
       <div className="overflow-x-scroll mx-[12rem] md:mx-4 sm:mx-0">
         <div className="rounded flex justify-between mb-2 w-fit">
           <div onClick={editList}>
             <div className="flex justify-between items-center w-screen p-3 bg-green-50">
               <p className="font-bold">{data?.shoppingCenter}</p>
-              <p>{data?.date}</p>
+              <p>{formatedDate(data?.date)}</p>
             </div>
           </div>
           <div
@@ -106,13 +109,18 @@ function DeleteList() {
 }
 
 function DeleteMessage({ id }) {
-  const {setDisplayDeleteMessage} = useContext(DeleteMessageContext);
+  const {setDisplayDeleteMessage, setShoppingList} = useContext(DeleteMessageContext);
 
   function deleteList() {
 
     const filteredList = JSON.parse(getListify).filter((list) => list.id !== id);
 
     localStorage.setItem("listify", JSON.stringify(filteredList));
+
+    const getListif =
+        typeof window !== "undefined" && localStorage.getItem("listify");
+
+      setShoppingList(JSON.parse(getListif)); 
 
     cancelDelete();
 
