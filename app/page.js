@@ -35,7 +35,7 @@ export default function Page() {
         <Loader />
       ) : (
         <>
-          {shoppingList.length > 0 ? (
+          {shoppingList?.length > 0 ? (
             <>
               {shoppingList?.map((list, i) => (
                 <HomeListContext.Provider key={i} value={{ list }}>
