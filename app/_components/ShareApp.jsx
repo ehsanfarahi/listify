@@ -32,7 +32,7 @@ export default function ShareApp() {
         className={`bg-white rounded-tl-lg rounded-tr-lg absolute ${
           showBarcode
             ? "bottom-0 transition-all duration-700 ease-in-out"
-            : "bottom-[-100%]"
+            : "bottom-[-100%] opacity-0"
         } left-0 right-0`}
       >
         <div className="relative">

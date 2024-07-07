@@ -144,7 +144,7 @@ function FormControlItem({ children }) {
     useContext(CreateListContext);
 
   function addItem() {
-    if (listItem === "" || listItem.length < 3) return;
+    if (listItem === "" || listItem?.length < 3) return;
 
     dispatch({
       type: "addItem",
@@ -162,7 +162,7 @@ function FormControlItem({ children }) {
   }
 
   function createAnotherList() {
-    if (makeList.length < 1) return;
+    if (makeList?.length < 1) return;
 
     dispatch({
       type: "createAnotherList",
@@ -224,8 +224,8 @@ function DisplayList() {
           {shoppingCenter}
         </h4>{" "}
         <span className="pl-2 text-sm">
-          {makeList.length > 0 &&
-            `(${makeList.length} item${makeList.length > 1 ? "s" : ""})`}
+          {makeList?.length > 0 &&
+            `(${makeList?.length} item${makeList?.length > 1 ? "s" : ""})`}
         </span>
       </div>
       {makeList?.map((item, i) => (
@@ -262,12 +262,12 @@ function ListCreateMessage() {
   return (
     <div className="fixed top-0 left-0 bottom-0 right-0">
       <div className="absolute top-0 left-0 bottom-0 right-0 bg-black opacity-35" />
-      <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-[60%] rounded p-4 bg-white">
+      <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-[75%] rounded p-4 bg-white">
         <p className="font-semibold text-sm flex items-center">
           <FaCheckCircle className="text-green-500 text-lg mr-2" /> List created
           successfully!
         </p>
-        <div className="flex justify-between gap-2 items-center mt-6">
+        <div className="flex flex-col gap-2 mt-6">
           <Button
             onClick={goToHomePage}
             customStyle="bg-orange-300 font-semibold rounded p-1 w-full"

@@ -30,7 +30,7 @@ export default function Page() {
   }, []);
 
   return (
-    <div className="grid grid-cols-2 gap-2 mx-2 my-4">
+    <div className="grid grid-cols-6 md:grid-cols-4 sm:grid-cols-2 gap-2 mx-[12rem] md:mx-4 sm:mx-2 my-10 md:my-4 sm:my-3">
       {isLoading ? (
         <Loader />
       ) : (
@@ -66,7 +66,7 @@ function List() {
       onClick={viewList}
       className="border-2 border-green-300 rounded p-2 aspect-square relative "
     >
-      <div className="flex justify-between items-center z-20">
+      <div className="flex justify-between items-center z-20 gap-1">
         <p className="font-bold bg-green-200 rounded-xl px-2 whitespace-nowrap overflow-hidden">
           {list.shoppingCenter}
         </p>

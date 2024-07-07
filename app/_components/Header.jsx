@@ -58,16 +58,16 @@ function HeaderContent() {
     const {dispatch} = useContext(HeaderContext);
 
   return (
-    <div className="flex justify-between items-center bg-blue-50 p-2 shadow z-30">
+    <div className="flex justify-between items-center bg-blue-50 px-[12rem] py-[.5rem] md:px-4 md:py-2 sm:px-2 sm:py-2 shadow z-30">
       <Link href="/">
-        <FcTodoList className="text-3xl" />
+        <FcTodoList className="text-5xl md:text-4xl sm:text-3xl" />
       </Link>
       <Link href="/">
-        <p className="text-green-500 font-semibold text-xl">{appName}</p>
+        <p className="text-green-500 font-semibold text-2xl md:text-xl sm:text-xl">{appName}</p>
       </Link>
       <BiMenuAltRight
         onClick={() => dispatch({ type: "showMenu", payload: true })}
-        className="text-3xl text-blue-500 cursor-pointer"
+        className="text-5xl md:text-4xl sm:text-3xl text-blue-500 cursor-pointer"
       />
     </div>
   );

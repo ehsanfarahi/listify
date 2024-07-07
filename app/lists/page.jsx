@@ -39,7 +39,7 @@ export default function Page() {
         <Loader />
       ) : (
         <>
-          {shoppingList.length > 0 ? (
+          {shoppingList?.length > 0 ? (
             <>
               {shoppingList
                 ?.filter((s) => s !== "")
@@ -72,8 +72,8 @@ function Lists() {
     <DeleteMessageContext.Provider
       value={{ displayDeleteMessage, setDisplayDeleteMessage }}
     >
-      <div className="overflow-x-scroll">
-        <div className=" rounded flex justify-between mb-2 w-fit">
+      <div className="overflow-x-scroll mx-[12rem] md:mx-4 sm:mx-0">
+        <div className="rounded flex justify-between mb-2 w-fit">
           <div onClick={editList}>
             <div className="flex justify-between items-center w-screen p-3 bg-green-50">
               <p className="font-bold">{data?.shoppingCenter}</p>
